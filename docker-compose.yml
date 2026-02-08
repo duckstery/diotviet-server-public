@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+
+  database:
+    image: postgres:12.12-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - storage:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_DB: other
+      POSTGRES_PASSWORD: 123456
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  storage:
